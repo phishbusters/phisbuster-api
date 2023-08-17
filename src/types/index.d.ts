@@ -1,7 +1,13 @@
-import { User } from '../models/user';
+import { IUser } from '../models/user';
 
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: User;
+    user: IUser;
+  }
+}
+
+declare module 'jsonwebtoken' {
+  interface JwtPayload {
+    username: string;
   }
 }

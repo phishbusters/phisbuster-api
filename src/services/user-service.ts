@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import { User, IUser } from '../models/user';
 import { UserRepository } from '../repositories/user-repository';
+import { envPrivateVars } from '../config/env-vars';
 
 export class UserService {
   constructor(private userRepository: UserRepository) {}
@@ -10,8 +12,10 @@ export class UserService {
     if (existingUser) {
       throw new Error('Username is already taken');
     }
-
-    const user = new User({ username, password });
+    // Encriptar la contraseña
+    const saltRounds = 10; // Puedes ajustar este número según tus necesidades
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const user = new User({ username, password: hashedPassword });
     this.userRepository.save(user);
 
     return user;
@@ -23,14 +27,17 @@ export class UserService {
       throw new Error('User does not exist');
     }
 
-    if (existingUser.password !== password) {
-      throw new Error('Invalid password');
+    const isCorrectPassword = await bcrypt.compare(
+      password,
+      existingUser.password,
+    );
+    if (!isCorrectPassword) {
+      throw new Error('User does not exist');
     }
 
-    // Generate a JWT with the username in the payload
     const token = jwt.sign(
       { username: existingUser.username },
-      'your-secret-key',
+      envPrivateVars.jwtTokenSecret,
     );
 
     return token;
