@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 export const envPrivateVars = {
+  env: process.env.ENV || '',
   chatFlaskService: process.env.FLASK_API_URL || '',
   jwtTokenSecret: process.env.JWT_SECRET || '',
   apiPort: process.env.API_PORT || '',

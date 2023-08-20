@@ -2,7 +2,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import csurf from 'csurf';
+// import csurf from 'csurf';
+import https from 'https';
+import fs from 'fs';
+import path from 'path';
 import cors from 'cors';
 import { routes } from './routes';
 import { envPrivateVars } from './config/env-vars';
@@ -45,6 +48,17 @@ routes.forEach((route) => {
   app.use(route.route, route.controller);
 });
 
-app.listen(apiPort, () => {
-  console.log(`Server is running at http://localhost:${apiPort}`);
-});
+if (envPrivateVars.env.toLocaleLowerCase() === 'production') {
+  const options = {
+    key: fs.readFileSync(path.join(__dirname, '../server.key')),
+    cert: fs.readFileSync(path.join(__dirname, '../server.cert')),
+  };
+
+  https.createServer(options, app).listen(apiPort, () => {
+    console.log(`Server running on https://localhost:${apiPort}`);
+  });
+} else {
+  app.listen(apiPort, () => {
+    console.log(`Server is running at http://localhost:${apiPort}`);
+  });
+}

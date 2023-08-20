@@ -4,10 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prod": "npm run build && npm start",
+    "build": "npx tsc",
     "prettier:check": "cross-os prettier:check",
     "prettier:write": "cross-os prettier:write",
     "test": "jest",
-    "start": "nodemon --exec 'ts-node --project tsconfig.json' src/server.ts"
+    "start:dev": "nodemon --exec 'ts-node --project tsconfig.json' src/server.ts",
+    "start": "node dist/server.js"
   },
   "cross-os": {
     "prettier:check": {
