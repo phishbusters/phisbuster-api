@@ -54,4 +54,13 @@ export class UserService {
 
     return paymentId;
   }
+
+  async getUser(username: string): Promise<IUser> {
+    const existingUser = await this.userRepository.findByUsername(username);
+    if (!existingUser) {
+      throw new Error('User does not exist');
+    }
+
+    return existingUser;
+  }
 }

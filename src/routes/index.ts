@@ -1,5 +1,6 @@
 import { UserRoutes } from './user-route';
 import { ChatRoutes } from './chat-route';
+import { DigitalAssetRoutes } from './digital-asset-route';
 
 export const routes = [
   {
@@ -9,5 +10,9 @@ export const routes = [
   {
     route: '/chat',
     controller: ChatRoutes,
+  },
+  {
+    route: '/asset',
+    controller: DigitalAssetRoutes,
   },
 ];

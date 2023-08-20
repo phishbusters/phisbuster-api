@@ -35,9 +35,10 @@ export function UserController(userService: UserService) {
     }
   });
 
-  router.get('/me', authenticated, (req, res) => {
-    const { username, digitalAssets } = req.user;
-    res.status(200).json({ username, digitalAssets });
+  router.get('/me', authenticated, async (req, res) => {
+    const { username } = req.user;
+    const user = await userService.getUser(username);
+    res.status(200).json(user);
   });
 
   return router;
