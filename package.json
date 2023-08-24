@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "ci:start": "npm i && npm run prod",
     "prod": "npm run build && npm start",
     "build": "npx tsc",
     "prettier:check": "cross-os prettier:check",

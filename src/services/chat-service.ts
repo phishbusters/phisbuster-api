@@ -8,12 +8,14 @@ import {
 export class ChatService {
   constructor(private chatRepository: ChatRepository) {}
 
-  async runModel(notPreprocessChat: string[]): Promise<string> {
+  async runModel(
+    notPreprocessChat: string[],
+  ): Promise<{ prediction: string; confidence: string }> {
     try {
       const response = await fetch(envPrivateVars.chatFlaskService, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chatContent: notPreprocessChat }),
+        body: JSON.stringify({ message: notPreprocessChat.join(' ') }),
       });
 
       if (!response.ok) {
@@ -21,14 +23,15 @@ export class ChatService {
       }
 
       const data = await response.json();
-      return data.classification; // Asumiendo que la respuesta incluye una propiedad 'classification'
+      const { prediction, confidence } = data;
+      return { prediction, confidence };
     } catch (error) {
       console.error('Error al ejecutar el modelo:', error);
       throw new Error('Error al ejecutar el modelo');
     }
   }
 
-  savePositiveCase(
+  async savePositiveCase(
     scammerUserId: string,
     affectedUserId: string,
     socialNetwork: SocialNetwork,

@@ -3,7 +3,7 @@ import { ChatService } from '../services/chat-service';
 import { SocialNetwork } from '../models/positive-chat-cases';
 import authenticated from '../middleware/authenticated';
 
-export function ChatController({ runModel, savePositiveCase }: ChatService) {
+export function ChatController(chatService: ChatService) {
   const router = express.Router();
 
   router.post('/analyze', authenticated, async (req, res) => {
@@ -14,13 +14,19 @@ export function ChatController({ runModel, savePositiveCase }: ChatService) {
         return res.status(400).json({ error: 'No messages sent' });
       }
 
-      const classification = await runModel(chatContent);
-      if (classification === 'phishing') {
-        // Always Twitter
-        savePositiveCase(scammerUserId, username, SocialNetwork.Twitter);
+      const { prediction, confidence } = await chatService.runModel(
+        chatContent,
+      );
+
+      if (prediction === 'phishing') {
+        chatService.savePositiveCase(
+          scammerUserId,
+          username,
+          SocialNetwork.Twitter,
+        );
       }
 
-      res.status(200).json({ classification, message: 'success' });
+      res.status(200).json({ prediction, confidence, message: 'success' });
     } catch (error: any) {
       res.status(400).send(error.message);
     }

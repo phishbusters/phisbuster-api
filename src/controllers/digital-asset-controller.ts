@@ -28,4 +28,6 @@ export function DigitalAssetController(
     const assets = await digitalAssetService.getAssetsByUserId(req.user._id);
     res.status(200).json(assets);
   });
+
+  return router;
 }
