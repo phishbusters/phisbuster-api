@@ -10,7 +10,7 @@ export class ChatService {
 
   async runModel(
     notPreprocessChat: string[],
-  ): Promise<{ prediction: string; confidence: string }> {
+  ): Promise<{ prediction: string; confidence: number }> {
     try {
       const response = await fetch(envPrivateVars.chatFlaskService, {
         method: 'POST',
