@@ -1,30 +1,45 @@
 import { IPhishingStat, PhishingStat } from '../models/phishing-stat';
 
 export class PhishingStatRepository {
-  async create(stat: IPhishingStat): Promise<IPhishingStat> {
-    return PhishingStat.create(stat);
+  async create(
+    stat: IPhishingStat,
+    field: keyof IPhishingStat,
+  ): Promise<IPhishingStat> {
+    return this.createOrUpdateStat(stat.date, field);
   }
 
   async createOrUpdateStat(
     date: Date,
     fieldToUpdate: keyof IPhishingStat,
-  ): Promise<void> {
+  ): Promise<IPhishingStat> {
     const stat = await this.getStatByDate(date);
     if (stat) {
       stat[fieldToUpdate]++;
-      await stat.save();
+      return await stat.save();
     } else {
-      await PhishingStat.create({ date, [fieldToUpdate]: 1 });
+      return await PhishingStat.create({ date, [fieldToUpdate]: 1 });
     }
   }
 
   async getStatsForLastWeek(): Promise<IPhishingStat[]> {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    oneWeekAgo.setHours(0, 0, 0, 0);
     return PhishingStat.find({ date: { $gte: oneWeekAgo } });
   }
 
   async getStatByDate(date: Date): Promise<IPhishingStat | null> {
-    return PhishingStat.findOne({ date });
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return PhishingStat.findOne({
+      date: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
   }
 }

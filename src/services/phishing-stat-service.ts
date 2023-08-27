@@ -4,9 +4,9 @@ import { PhishingStatRepository } from '../repositories/phishing-stat-repository
 export class PhishingStatService {
   constructor(private phishingStatRepository: PhishingStatRepository) {}
 
-  async recordStat(stat: IPhishingStat): Promise<IPhishingStat> {
-    return this.phishingStatRepository.create(stat);
-  }
+  // async recordStat(stat: IPhishingStat): Promise<IPhishingStat> {
+  //   return this.phishingStatRepository.create(stat);
+  // }
 
   async getStatsForLastWeek(): Promise<IPhishingStat[]> {
     return this.phishingStatRepository.getStatsForLastWeek();

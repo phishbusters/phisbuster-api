@@ -58,7 +58,6 @@ export class UserService {
       throw new Error('User does not exist');
     }
 
-    console.log(password, existingUser.password);
     const isCorrectPassword = await bcrypt.compare(
       password,
       existingUser.password,
