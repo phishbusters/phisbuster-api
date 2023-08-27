@@ -31,7 +31,7 @@ export function UserController(userService: UserService) {
       const token = await userService.login(username, password);
       res.status(200).json({ token });
     } catch (error: any) {
-      res.status(400).send(error.message);
+      res.status(400).send({ error: error.message });
     }
   });
 

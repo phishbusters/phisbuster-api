@@ -6,6 +6,6 @@ export class UserRepository {
   }
 
   async findByUsername(username: string): Promise<IUser | null> {
-    return User.findOne({ username }).select('-password');
+    return User.findOne({ username });
   }
 }
