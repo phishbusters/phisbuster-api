@@ -10,7 +10,7 @@
     "prettier:check": "cross-os prettier:check",
     "prettier:write": "cross-os prettier:write",
     "test": "jest",
-    "start:dev": "nodemon --exec 'ts-node --project tsconfig.json' src/server.ts",
+    "start:dev": "cross-os dev:start",
     "start": "node dist/server.js"
   },
   "cross-os": {
@@ -21,6 +21,10 @@
     "prettier:write": {
       "darwin": "prettier --write '**/*.{js,ts,json,css,md}'",
       "win32": "prettier --write \"**/*.{js,ts,json,css,md}\""
+    },
+    "dev:start": {
+      "darwin": "nodemon --exec 'ts-node --project tsconfig.json' src/server.ts",
+      "win32": "nodemon --exec \"ts-node --project tsconfig.json\" src/server.ts"
     }
   },
   "keywords": [],

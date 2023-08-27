@@ -1,6 +1,7 @@
 import { UserRoutes } from './user-route';
 import { ChatRoutes } from './chat-route';
 import { DigitalAssetRoutes } from './digital-asset-route';
+import { PhishingStatRoute } from './phishing-stat-route';
 
 export const routes = [
   {
@@ -14,5 +15,9 @@ export const routes = [
   {
     route: '/asset',
     controller: DigitalAssetRoutes,
+  },
+  {
+    route: '/phishing-stats',
+    controller: PhishingStatRoute,
   },
 ];

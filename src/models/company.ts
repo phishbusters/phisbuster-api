@@ -25,7 +25,7 @@ const companySchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'DigitalAsset',
-      required: true,
+      required: false,
     },
   ],
   clients: [

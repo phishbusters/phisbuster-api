@@ -5,6 +5,9 @@ export enum AssetType {
   Image = 'Image',
   URL = 'URL',
   SocialNetworkUrl = 'SocialNetworkUrl',
+  Phone = 'phone',
+  Email = 'email',
+  PublicFaces = 'PublicFaces',
 }
 
 export interface IDigitalAsset extends Document {

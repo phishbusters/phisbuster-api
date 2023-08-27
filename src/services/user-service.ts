@@ -1,21 +1,52 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { User, IUser } from '../models/user';
+import { SubscriptionStatus } from '../models/company';
+import { User, IUser, UserType } from '../models/user';
 import { UserRepository } from '../repositories/user-repository';
 import { envPrivateVars } from '../config/env-vars';
 
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async register(username: string, password: string): Promise<IUser> {
+  async register(
+    username: string,
+    password: string,
+    companyName: string,
+  ): Promise<IUser> {
     const existingUser = await this.userRepository.findByUsername(username);
     if (existingUser) {
       throw new Error('Username is already taken');
     }
-    // Encriptar la contraseña
+
     const saltRounds = 10; // Puedes ajustar este número según tus necesidades
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const user = new User({ username, password: hashedPassword });
+    const user = new User({
+      username,
+      password: hashedPassword,
+      userType: UserType.company,
+      companyName,
+      // TODO: Change later
+      subscriptionStatus: SubscriptionStatus.Active,
+    });
+    this.userRepository.save(user);
+
+    return user;
+  }
+
+  async registerClient(username: string, password: string, company: string) {
+    const existingUser = await this.userRepository.findByUsername(username);
+    if (existingUser) {
+      throw new Error('Username is already taken');
+    }
+
+    const saltRounds = 10; // Puedes ajustar este número según tus necesidades
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const user = new User({
+      username,
+      password: hashedPassword,
+      company,
+      userType: UserType.client,
+    });
     this.userRepository.save(user);
 
     return user;

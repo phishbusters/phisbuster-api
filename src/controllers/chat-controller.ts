@@ -3,6 +3,7 @@ import { ChatService } from '../services/chat-service';
 import { SocialNetwork } from '../models/positive-chat-cases';
 import authenticated from '../middleware/authenticated';
 import { defineBodyRoute } from '../helpers/define-route';
+import { PhishingStatService } from '../services/phishing-stat-service';
 
 interface AnalyzeRequestBody {
   messages: string[];
@@ -10,7 +11,10 @@ interface AnalyzeRequestBody {
   profileName?: string | null;
 }
 
-export function ChatController(chatService: ChatService) {
+export function ChatController(
+  chatService: ChatService,
+  phishingStatService: PhishingStatService,
+) {
   const router = express.Router();
 
   router.post(
@@ -26,6 +30,7 @@ export function ChatController(chatService: ChatService) {
 
         const { prediction, confidence } = await chatService.runModel(messages);
         if (prediction === 'phishing') {
+          phishingStatService.incrementPhishingChats(new Date());
           chatService.savePositiveCase(
             profile || profileName || 'unknown',
             username,
