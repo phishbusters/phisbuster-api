@@ -8,7 +8,11 @@ export function UserController(userService: UserService) {
   router.post('/register/companies', async (req, res) => {
     try {
       const { username, password, confirmPassword, companyName } = req.body;
-      const user = await userService.register(username, password, companyName);
+      const user = await userService.registerCompany(
+        username,
+        password,
+        companyName,
+      );
       res.status(200).json({ user });
     } catch (error: any) {
       res.status(400).send(error.message);
@@ -18,7 +22,11 @@ export function UserController(userService: UserService) {
   router.post('/register/clients', async (req, res) => {
     try {
       const { username, password, confirmPassword, company } = req.body;
-      const user = await userService.register(username, password, company);
+      const user = await userService.registerCompany(
+        username,
+        password,
+        company,
+      );
       res.status(200).json({ user });
     } catch (error: any) {
       res.status(400).send(error.message);

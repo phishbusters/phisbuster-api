@@ -8,7 +8,7 @@ import { envPrivateVars } from '../config/env-vars';
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async register(
+  async registerCompany(
     username: string,
     password: string,
     companyName: string,
@@ -25,11 +25,10 @@ export class UserService {
       password: hashedPassword,
       userType: UserType.company,
       companyName,
-      // TODO: Change later
-      subscriptionStatus: SubscriptionStatus.Active,
+      subscriptionStatus: SubscriptionStatus.Inactive,
     });
-    this.userRepository.save(user);
 
+    this.userRepository.save(user);
     return user;
   }
 
@@ -47,8 +46,8 @@ export class UserService {
       company,
       userType: UserType.client,
     });
-    this.userRepository.save(user);
 
+    this.userRepository.save(user);
     return user;
   }
 
