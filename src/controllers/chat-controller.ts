@@ -40,7 +40,7 @@ export function ChatController(
 
         res.status(200).json({ prediction, confidence });
       } catch (error: any) {
-        res.status(400).send({ error: error.message });
+        res.status(400).send({ message: error.message });
       }
     }),
   );

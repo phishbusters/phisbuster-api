@@ -10,7 +10,7 @@ export function PhishingStatController(service: PhishingStatService) {
       const stats = await service.getStatsForLastWeek();
       res.status(200).json(stats);
     } catch (error: any) {
-      res.status(500).send({ error: error.message });
+      res.status(500).send({ message: error.message });
     }
   });
 

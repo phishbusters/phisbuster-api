@@ -13,7 +13,7 @@ export const routes = [
     controller: ChatRoutes,
   },
   {
-    route: '/asset',
+    route: '/assets',
     controller: DigitalAssetRoutes,
   },
   {

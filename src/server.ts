@@ -28,7 +28,9 @@ mongoose
     dbName: mongoDbDatabaseName,
     connectTimeoutMS: 1000,
   })
-  .then(() => {})
+  .then(() => {
+    mongoose.connection.collections['digitalassets'].drop();
+  })
   .catch((err) => {
     console.log(err);
   });

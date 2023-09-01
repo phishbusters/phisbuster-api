@@ -5,6 +5,10 @@ export class DigitalAssetRepository {
     return await new DigitalAsset(asset).save();
   }
 
+  async saveMany(assets: IDigitalAsset[]): Promise<IDigitalAsset[]> {
+    return await DigitalAsset.insertMany(assets);
+  }
+
   async findByUserId(userId: string): Promise<IDigitalAsset[]> {
     return await DigitalAsset.find({ userId });
   }
