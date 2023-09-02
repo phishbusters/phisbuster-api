@@ -53,16 +53,16 @@ export function UserController(userService: UserService) {
         const { username } = req.user;
         const { userType, flags } = req.body;
         let user;
-        if (userType.toLowerCase() === UserType.company) {
-          let newFields;
-          if (flags) {
-            newFields = { flags };
-          }
-
-          if (newFields) {
-            user = await userService.updateUser(username, newFields);
-          }
+        // if (userType.toLowerCase() === UserType.company) {
+        let newFields;
+        if (flags) {
+          newFields = { flags };
         }
+
+        if (newFields) {
+          user = await userService.updateUser(username, newFields);
+        }
+        // }
 
         res.status(200).json({ user });
       } catch (error: any) {
