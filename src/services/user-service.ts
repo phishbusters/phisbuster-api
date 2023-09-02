@@ -111,9 +111,9 @@ export class UserService {
   }
 
   async updateUserAssets(user: IUser, assets: IDigitalAsset[]) {
-    if (!user.company) {
-      throw new Error('User is not a company');
-    }
+    // if (!user.company) {
+    //   throw new Error('User is not a company');
+    // }
 
     let digitalAssets = user.company!.digitalAssets;
     if (digitalAssets.length > 0) {
