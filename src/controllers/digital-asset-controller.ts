@@ -21,11 +21,11 @@ export function DigitalAssetController(
     authenticated,
     defineBodyRoute<{ newAssets: CreateDigitalAsset[] }>(async (req, res) => {
       const user = req.user;
-      if (!user.isCompany()) {
-        return res.status(403).json({
-          message: 'Forbidden.',
-        });
-      }
+      // if (!user.isCompany()) {
+      //   return res.status(403).json({
+      //     message: 'Forbidden.',
+      //   });
+      // }
 
       const { newAssets } = req.body;
       const assets = await digitalAssetService.saveAssets(newAssets);
