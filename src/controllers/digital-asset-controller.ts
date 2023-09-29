@@ -54,7 +54,6 @@ export function DigitalAssetController(
       const user = req.user;
       const userFileName = user.username.split('@')[0];
       if (!file) {
-        console.log(file);
         return res
           .status(400)
           .json({ message: 'La imagen cargada es incorrecta.' });
