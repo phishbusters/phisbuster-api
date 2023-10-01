@@ -3,6 +3,7 @@ import 'dotenv/config';
 export const envPrivateVars = {
   env: process.env.ENV || '',
   chatFlaskService: process.env.FLASK_API_URL || '',
+  profileFlaskService: process.env.FLASK_PROFILE_URL || '',
   jwtTokenSecret: process.env.JWT_SECRET || '',
   apiPort: process.env.API_PORT || '',
   mongoDb: {

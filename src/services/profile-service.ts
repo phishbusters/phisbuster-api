@@ -9,7 +9,7 @@ export class ProfileService {
     screenName: string,
   ): Promise<{ prediction: string; confidence: number }> {
     try {
-      const response = await fetch(envPrivateVars.chatFlaskService, {
+      const response = await fetch(envPrivateVars.profileFlaskService, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ screenName }),
