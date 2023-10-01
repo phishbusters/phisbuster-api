@@ -6,6 +6,13 @@ export class ProfileRepository {
     confidence: string,
     mostSimilarCompany?: string,
   ): Promise<IAnalyzedProfile> {
+    const existingProfile = await AnalyzedProfile.findOne({
+      profileId: screenName,
+    });
+    if (existingProfile) {
+      return existingProfile;
+    }
+
     const positiveCase = new AnalyzedProfile({
       profileId: screenName,
       confidenceLevel: confidence,
