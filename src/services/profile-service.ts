@@ -12,7 +12,7 @@ export class ProfileService {
       const response = await fetch(envPrivateVars.profileFlaskService, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ screenName }),
+        body: JSON.stringify({ screen_name: screenName }),
       });
 
       if (!response.ok) {
