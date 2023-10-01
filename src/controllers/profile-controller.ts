@@ -25,11 +25,11 @@ export function ProfileController(
           return res.status(400).json({ error: 'No profile sent.' });
         }
 
-        const { prediction, confidence } = await profileService.runModel(
+        const { predictionLabel, confidence } = await profileService.runModel(
           screenName,
         );
 
-        if (prediction === '') {
+        if (predictionLabel === 'fake') {
           phishingStatService.incrementFakeProfiles(new Date());
           profileService.savePositiveCase(
             screenName,
@@ -38,7 +38,11 @@ export function ProfileController(
           );
         }
 
-        res.status(200).json({ prediction, confidence });
+        res.status(200).json({
+          prediction: predictionLabel === 'fake' ? 1.0 : 0.0,
+          predictionLabel,
+          confidence,
+        });
       } catch (error: any) {
         res.status(400).send({ message: error.message });
       }

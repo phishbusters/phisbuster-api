@@ -5,9 +5,12 @@ import { ProfileRepository } from '../repositories/profile-repository';
 export class ProfileService {
   constructor(private profileRepository: ProfileRepository) {}
 
-  async runModel(
-    screenName: string,
-  ): Promise<{ prediction: string; confidence: number }> {
+  async runModel(screenName: string): Promise<{
+    prediction: number[];
+    predictionLabel: 'fake' | 'real';
+    confidence: number;
+    predictionTime: Date;
+  }> {
     try {
       const response = await fetch(envPrivateVars.profileFlaskService, {
         method: 'POST',
@@ -20,8 +23,14 @@ export class ProfileService {
       }
 
       const data = await response.json();
-      const { prediction, confidence } = data;
-      return { prediction, confidence };
+      const { prediction, prediction_label, confidence, prediction_time } =
+        data;
+      return {
+        prediction,
+        predictionLabel: prediction_label,
+        confidence,
+        predictionTime: prediction_time,
+      };
     } catch (error) {
       console.error('Error al ejecutar el modelo:', error);
       throw new Error('Error al ejecutar el modelo');
