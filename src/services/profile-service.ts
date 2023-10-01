@@ -22,9 +22,8 @@ export class ProfileService {
         throw new Error('Error al ejecutar el modelo');
       }
 
-      const data = await response.json();
       const { prediction, prediction_label, confidence, prediction_time } =
-        data;
+        await response.json();
       return {
         prediction,
         predictionLabel: prediction_label,
