@@ -20,21 +20,19 @@ export function ProfileController(
     defineBodyRoute<ProfileAnalyzeRequestBody>(async (req, res) => {
       try {
         const { screenName } = req.body;
-        const { company } = req.user!;
         if (!screenName) {
-          return res.status(400).json({ error: 'No profile sent.' });
+          return res.status(400).json({ message: 'No profile sent.' });
         }
 
-        const { predictionLabel, confidence } = await profileService.runModel(
-          screenName,
-        );
+        const { predictionLabel, confidence, relatedCompany } =
+          await profileService.runModel(screenName);
 
         if (predictionLabel === 'fake') {
           phishingStatService.incrementFakeProfiles(new Date());
           profileService.savePositiveCase(
             screenName,
             confidence.toString(),
-            company?.companyName || 'No conocida',
+            relatedCompany || 'No conocida',
           );
         }
 

@@ -7,9 +7,9 @@ export class ProfileRepository {
     mostSimilarCompany?: string,
   ): Promise<IAnalyzedProfile> {
     const positiveCase = new AnalyzedProfile({
-      screenName,
-      confidence,
-      mostSimilarCompany,
+      profileId: screenName,
+      confidenceLevel: confidence,
+      relatedCompanyName: mostSimilarCompany,
     });
 
     return positiveCase.save();

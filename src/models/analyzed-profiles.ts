@@ -11,7 +11,7 @@ const analyzedProfileSchema = new mongoose.Schema({
   profileId: { type: String, required: true, unique: true },
   confidenceLevel: { type: Number, required: true },
   analysisDate: { type: Date, required: true, default: Date.now() },
-  mostSimilarCompany: { type: String, required: false },
+  relatedCompanyName: { type: String, required: false, default: '' },
 });
 
 export const AnalyzedProfile = mongoose.model<IAnalyzedProfile>(

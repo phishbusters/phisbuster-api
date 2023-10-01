@@ -10,6 +10,7 @@ export class ProfileService {
     predictionLabel: 'fake' | 'real';
     confidence: number;
     predictionTime: Date;
+    relatedCompany: string;
   }> {
     try {
       const response = await fetch(envPrivateVars.profileFlaskService, {
@@ -22,13 +23,19 @@ export class ProfileService {
         throw new Error('Error al ejecutar el modelo');
       }
 
-      const { prediction, prediction_label, confidence, prediction_time } =
-        await response.json();
+      const {
+        prediction,
+        prediction_label,
+        confidence,
+        prediction_time,
+        related_company,
+      } = await response.json();
       return {
         prediction,
         predictionLabel: prediction_label,
         confidence,
         predictionTime: prediction_time,
+        relatedCompany: related_company,
       };
     } catch (error) {
       console.error('Error al ejecutar el modelo:', error);
