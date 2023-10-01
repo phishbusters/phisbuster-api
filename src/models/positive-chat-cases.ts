@@ -4,6 +4,7 @@ export enum SocialNetwork {
   Facebook = 'facebook',
   Instagram = 'instagram',
   Twitter = 'twitter',
+  Linkedin = 'linkedIn',
 }
 
 export interface IPositiveChatCase extends Document {

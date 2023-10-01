@@ -2,6 +2,7 @@ import { UserRoutes } from './user-route';
 import { ChatRoutes } from './chat-route';
 import { DigitalAssetRoutes } from './digital-asset-route';
 import { PhishingStatRoute } from './phishing-stat-route';
+import { ProfileRoutes } from './profile-route';
 
 export const routes = [
   {
@@ -19,5 +20,9 @@ export const routes = [
   {
     route: '/phishing-stats',
     controller: PhishingStatRoute,
+  },
+  {
+    route: '/profile',
+    controller: ProfileRoutes,
   },
 ];

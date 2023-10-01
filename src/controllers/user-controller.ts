@@ -28,16 +28,16 @@ export function UserController(userService: UserService) {
           .send({ message: 'Las contraseñas no coinciden.' });
       }
 
-      let user;
-      if (userType === UserType.company) {
-        user = await userService.registerCompany(
-          username,
-          password,
-          companyName,
-        );
-      } else {
-        user = await userService.registerClient(username, password, name);
-      }
+      // let user;
+      // if (userType === UserType.company) {
+      const user = await userService.registerCompany(
+        username,
+        password,
+        companyName,
+      );
+      // } else {
+      //   user = await userService.registerClient(username, password, name);
+      // }
 
       res.status(200).json({ user });
     } catch (error: any) {

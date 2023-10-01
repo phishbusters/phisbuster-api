@@ -8,8 +8,6 @@ export enum ComplaintStatus {
 
 export interface IComplaint extends Document {
   complaintId: string;
-  complaintType: string;
-  complaintContent: string;
   status: ComplaintStatus;
   actionRequired: boolean;
   createdAt: Date;
@@ -18,8 +16,6 @@ export interface IComplaint extends Document {
 
 const complaintSchema = new mongoose.Schema({
   complaintId: { type: String, required: true, unique: true },
-  complaintType: { type: String, required: true },
-  complaintContent: { type: String, required: true },
   status: {
     type: String,
     enum: Object.values(ComplaintStatus),
