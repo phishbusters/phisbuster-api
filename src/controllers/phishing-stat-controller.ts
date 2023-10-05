@@ -7,8 +7,9 @@ export function PhishingStatController(service: PhishingStatService) {
 
   router.get('/', authenticated, async (req, res) => {
     try {
-      const stats = await service.getStatsForLastWeek();
-      res.status(200).json(stats);
+      const lastSevenDays = await service.getStatsForLastWeek();
+      const sinceCreation = await service.sinceCreation();
+      res.status(200).json({ lastSevenDays, sinceCreation });
     } catch (error: any) {
       res.status(500).send({ message: error.message });
     }

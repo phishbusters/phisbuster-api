@@ -12,6 +12,14 @@ export class PhishingStatService {
     return this.phishingStatRepository.getStatsForLastWeek();
   }
 
+  async sinceCreation(): Promise<{
+    totalPhishingChats: number;
+    totalFakeProfiles: number;
+    totalComplaints: number;
+  }> {
+    return this.phishingStatRepository.sinceCreation();
+  }
+
   async incrementPhishingChats(date: Date): Promise<void> {
     await this.phishingStatRepository.createOrUpdateStat(
       date,

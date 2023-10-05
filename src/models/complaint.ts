@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 export enum ComplaintStatus {
+  Created = 'Created',
   Open = 'Open',
   Closed = 'Closed',
   Pending = 'Pending',

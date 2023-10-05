@@ -28,6 +28,37 @@ export class PhishingStatRepository {
     return PhishingStat.find({ date: { $gte: oneWeekAgo } });
   }
 
+  async sinceCreation(): Promise<{
+    totalPhishingChats: number;
+    totalFakeProfiles: number;
+    totalComplaints: number;
+  }> {
+    const result = await PhishingStat.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalPhishingChats: { $sum: '$phishingChatsDetected' },
+          totalFakeProfiles: { $sum: '$fakeProfilesDetected' },
+          totalComplaints: { $sum: '$complaintsExecuted' },
+        },
+      },
+    ]);
+
+    if (result.length > 0) {
+      return {
+        totalPhishingChats: result[0].totalPhishingChats,
+        totalFakeProfiles: result[0].totalFakeProfiles,
+        totalComplaints: result[0].totalComplaints,
+      };
+    } else {
+      return {
+        totalPhishingChats: 0,
+        totalFakeProfiles: 0,
+        totalComplaints: 0,
+      };
+    }
+  }
+
   async getStatByDate(date: Date): Promise<IPhishingStat | null> {
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
