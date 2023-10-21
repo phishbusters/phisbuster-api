@@ -196,10 +196,9 @@ export class UserService {
 
     drawTextWithLineBreaks(
       page,
-      bodyText.replace(/\n/g, ' '),
+      bodyText,
       50,
       700,
-      500,
       18,
       bodyFont,
       12,
