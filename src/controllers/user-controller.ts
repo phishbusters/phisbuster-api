@@ -52,6 +52,7 @@ export function UserController(userService: UserService) {
       return res.status(500).send({ message: 'Error al firmar el documento.' });
     }
 
+    userService.saveUser(user);
     res.status(200).json({});
   });
 

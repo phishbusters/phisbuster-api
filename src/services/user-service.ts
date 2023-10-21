@@ -7,6 +7,7 @@ import { IDigitalAsset } from '../models/digital-assset';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { s3 } from '../config/aws-config';
 import { v4 as uuidv4 } from 'uuid';
+import { drawTextWithLineBreaks } from '../utils/pdf';
 
 export class UserService {
   constructor(private userRepository: UserRepository) {}
@@ -72,6 +73,10 @@ export class UserService {
 
     this.userRepository.save(existingUser);
     return existingUser;
+  }
+
+  async saveUser(user: IUser) {
+    this.userRepository.save(user);
   }
 
   async login(username: string, password: string): Promise<string> {
@@ -189,14 +194,17 @@ export class UserService {
     [Título del Representante Legal]
   `;
 
-    page.drawText(bodyText, {
-      x: 50,
-      y: 700,
-      lineHeight: 18,
-      font: bodyFont,
-      size: 12,
-      color: rgb(0, 0, 0),
-    });
+    drawTextWithLineBreaks(
+      page,
+      bodyText,
+      50,
+      700,
+      500,
+      18,
+      bodyFont,
+      12,
+      rgb(0, 0, 0),
+    );
 
     const pdfBytes = await pdfDoc.save();
     const params = {
