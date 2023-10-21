@@ -16,22 +16,27 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const jsonData = pm.response.json();",
-									"if (jsonData.token) {",
-									"    const token = jsonData.token;",
-									"    pm.environment.set(\"JWT\", token)",
-									"}"
+									"try {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        const token = jsonData.token;",
+									"        pm.environment.set(\"JWT\", token)",
+									"    }",
+									"} catch {}"
 								],
 								"type": "text/javascript"
 							}
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"fpmirabile@gmail.com\",\n    \"password\": \"Ferchu$91\"\n}",
+							"raw": "{\n    \"username\": \"fmira211@gmail.com\",\n    \"password\": \"Ferchu$91\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -79,25 +84,55 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/user/me",
+							"raw": "{{URL}}/user",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"user",
-								"me"
+								"user"
 							]
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Clients",
-			"item": [
+				},
 				{
-					"name": "Register new client",
+					"name": "Update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userType\": \"company\",\r\n    \"flags\": {\r\n        \"shouldSeeOnboarding\": false\r\n    }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
 					"event": [
 						{
 							"listen": "test",
@@ -114,7 +149,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"fpmirabile@gmail.com\",\n    \"password\": \"Ferchu$91\",\n    \"confirmPassword\": \"Ferchu$$91\",\n    \"company\": \"Mi compania\"\n}",
+							"raw": "{\n    \"username\": \"fmira211@gmail.com\",\n    \"password\": \"Ferchu$91\",\n    \"confirmPassword\": \"Ferchu$91\",\n    \"companyName\": \"Mi Compania\",\n    \"userType\": \"company\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -122,43 +157,35 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/user/register/clients",
+							"raw": "{{URL}}/user",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"user",
-								"register",
-								"clients"
+								"user"
 							]
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Companies",
-			"item": [
+				},
 				{
-					"name": "Register new company",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
+					"name": "Authorize signing documents",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"fpmirabile@gmail.com\",\n    \"password\": \"Ferchu$91\",\n    \"confirmPassword\": \"Ferchu$$91\",\n    \"companyName\": \"Mi Compania\"\n}",
+							"raw": "{}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -166,14 +193,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/user/register/companies",
+							"raw": "{{URL}}/user/sign-auth",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"user",
-								"register",
-								"companies"
+								"sign-auth"
 							]
 						}
 					},
@@ -182,7 +208,7 @@
 			]
 		},
 		{
-			"name": "Chat analyze",
+			"name": "Profile analyze",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -198,7 +224,44 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"messages\": [\n        \"Hola. Soy de Uala. La forma mas rapida de comunicarte es con celular, el numero es 1140793709\"\n    ],\n    \"profile\": \"@nicogastiazoro\",\n    \"profileName\": \"Ng\"\n}\n",
+					"raw": "{\n    \"screenName\": \"brendaasesora\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/profile/analyze",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"profile",
+						"analyze"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "chat analyze",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"messages\": [ \"mensajes\" ],\n    \"profile\": \"fer\",\n    \"profileName\": \"\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -252,6 +315,107 @@
 					],
 					"path": [
 						"phishing-stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload digital assets",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"newAssets\": [\r\n        {\r\n            \"assetType\": \"Image\",\r\n            \"value\": \"https://\"\r\n        }\r\n    ],\r\n    \"acceptedAuth\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/assets",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all my digital assets",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/assets",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload digital asset image to s3",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/fpmir/Downloads/diagrama flujo - modelos de machine learning.drawio.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}/assets/images",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"assets",
+						"images"
 					]
 				}
 			},

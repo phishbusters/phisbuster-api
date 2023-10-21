@@ -45,6 +45,16 @@ export function UserController(userService: UserService) {
     }
   });
 
+  router.post('/sign-auth', authenticated, async (req, res) => {
+    const user = req.user;
+    const hasErrors = await userService.createAuthorizationDocument(user);
+    if (hasErrors) {
+      return res.status(500).send({ message: 'Error al firmar el documento.' });
+    }
+
+    res.status(200).json({});
+  });
+
   router.put(
     '/',
     authenticated,

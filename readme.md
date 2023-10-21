@@ -1,38 +1,72 @@
-# Phisbusters API
+# PhishBuster API
 
-## Useful concepts
+PhishBuster API is a backend service designed to handle phishing detection and related activities. This document provides a guide on how to set up the project, understand its architecture, and interact with its endpoints.
 
-- controllers: This directory will contain your route handlers (also known as controllers). Each controller will handle a specific route or a group of related routes.
-- services: This directory will contain your business logic. Each service will handle a specific piece of business logic.
-- repositories: This directory will contain your data access logic. Each repository will handle data access for a specific model or entity.
-- models: This directory will contain your data models or entities.
-- routes: This directory will contain your route definitions.
+## Table of Contents
 
-## User Endpoints
+- [Installation](#installation)
+  - [Environment Variables](#environment-variables)
+  - [MongoDB Setup](#mongodb-setup)
+  - [AWS Setup](#aws-setup)
+  - [Email Service](#email-service)
+- [Architecture](#architecture)
+  - [Controllers](#controllers)
+  - [Services](#services)
+  - [Repositories](#repositories)
+  - [Models](#models)
+  - [Routes](#routes)
+- [API Endpoints](#api-endpoints)
 
-POST /users/register: Register a new user (company).
-POST /users/login: Login a user.
-GET /users/me: Get the currently logged-in user's details.
-PUT /users/me: Update the currently logged-in user's details.
-DELETE /users/me: Delete the currently logged-in user's account.
+## Installation
 
-## Subscription Endpoints
+### Environment Variables
 
-POST /subscriptions: Create a new subscription for the currently logged-in user.
-GET /subscriptions/me: Get the currently logged-in user's subscription details.
-PUT /subscriptions/me: Update the currently logged-in user's subscription.
-DELETE /subscriptions/me: Cancel the currently logged-in user's subscription.
+Rename `.env.template` to `.env` in the root directory of the project in order to get the env variables.
 
-## Digital Asset Endpoints
+### MongoDB Setup
 
-POST /assets: Upload a new digital asset for validation.
-GET /assets: Get a list of all the currently logged-in user's digital assets.
-GET /assets/:id: Get a specific digital asset's details.
-PUT /assets/:id: Update a specific digital asset's details.
-DELETE /assets/:id: Delete a specific digital asset.
+To run MongoDB locally, you can use Docker Compose. Run the following command to start the MongoDB container:
 
-## Complaint Endpoints
+\`\`\`bash
+docker-compose up
+\`\`\`
 
-GET /complaints: Get a list of all the currently logged-in user's complaints.
-GET /complaints/:id: Get a specific complaint's details.
-PUT /complaints/:id: Update a specific complaint's status or details.
+### AWS Setup
+
+1. Sign in to your AWS Management Console.
+2. Navigate to IAM (Identity and Access Management).
+3. Create a new user and grant it programmatic access.
+4. Attach the AmazonS3FullAccess policy to the user.
+5. Note down the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+Create an S3 bucket with the name `phish-buster-images`.
+
+### Email Service
+
+Email functionality is not yet implemented. This section will be updated once it's available.
+
+## Architecture
+
+### Controllers
+
+Controllers handle incoming HTTP requests and delegate the business logic to services. They are responsible for sending the HTTP response back to the client.
+
+### Services
+
+Services contain the core business logic of the application. They interact with repositories to perform CRUD operations on the database.
+
+### Repositories
+
+Repositories are responsible for interacting with the database. They perform CRUD operations and return the results back to the services.
+
+### Models
+
+Models define the structure of the database collections. They are used by repositories to interact with the database.
+
+### Routes
+
+Routes define the endpoints of the API. They map HTTP methods and paths to controller functions.
+
+## API Endpoints
+
+A Postman collection named `PhishBusters.postman_collection.json` is included in the project. This collection contains examples of all available endpoints.

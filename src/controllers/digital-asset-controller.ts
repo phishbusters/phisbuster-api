@@ -20,7 +20,10 @@ export function DigitalAssetController(
   router.post(
     '/',
     authenticated,
-    defineBodyRoute<{ newAssets: CreateDigitalAsset[] }>(async (req, res) => {
+    defineBodyRoute<{
+      newAssets: CreateDigitalAsset[];
+      acceptedAuth?: boolean;
+    }>(async (req, res) => {
       const user = req.user;
       // if (!user.isCompany()) {
       //   return res.status(403).json({
@@ -28,20 +31,24 @@ export function DigitalAssetController(
       //   });
       // }
 
-      const { newAssets } = req.body;
+      const { newAssets, acceptedAuth } = req.body;
+      if (acceptedAuth) {
+        await userService.createAuthorizationDocument(user);
+      }
+
       const assets = await digitalAssetService.saveAssets(newAssets);
       const updatedUser = await userService.updateUserAssets(user, assets);
       res.status(201).json({ assets, updatedUser });
     }),
   );
 
-  router.get('/assets', authenticated, async (req, res) => {
+  router.get('/', authenticated, async (req, res) => {
     const user = req.user;
     // if (!user.isCompany()) {
     //   return res.status(403).json({ message: 'Access forbidden.' });
     // }
 
-    const assets = await digitalAssetService.getAssetsByUserId(req.user._id);
+    const assets = await digitalAssetService.getAssetsByUserId(user._id);
     res.status(200).json(assets);
   });
 

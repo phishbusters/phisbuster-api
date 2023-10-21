@@ -24,6 +24,11 @@ export interface IUser extends mongoose.Document {
     subscriptionStatus: SubscriptionStatus;
     digitalAssets: IDigitalAsset[];
     clients: mongoose.Types.ObjectId[];
+    authorizationStatus: 'pending' | 'accepted';
+    authorizationDocument: {
+      url: string;
+      expiresAt?: Date;
+    };
   };
   name?: string;
   flags: Flags;
@@ -57,6 +62,15 @@ const userSchema = new mongoose.Schema({
         required: false,
       },
     ],
+    authorizationDocument: {
+      url: { type: String, required: false, default: '' },
+      expiresAt: { type: Date, required: false },
+    },
+    authorizationStatus: {
+      type: String,
+      enum: ['pending', 'accepted'],
+      default: 'pending',
+    },
   },
   flags: {
     shouldSeeOnboarding: { type: Boolean, required: false, default: true },

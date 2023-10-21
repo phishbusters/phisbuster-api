@@ -1,4 +1,5 @@
 import { DigitalAsset, IDigitalAsset } from '../models/digital-assset';
+import { User } from '../models/user';
 
 export class DigitalAssetRepository {
   async save(asset: IDigitalAsset): Promise<IDigitalAsset> {
@@ -10,6 +11,10 @@ export class DigitalAssetRepository {
   }
 
   async findByUserId(userId: string): Promise<IDigitalAsset[]> {
-    return await DigitalAsset.find({ userId });
+    const user = await User.findById(userId).populate('company.digitalAssets');
+    if (!user || !user.company || !user.company.digitalAssets) {
+      return [];
+    }
+    return user.company.digitalAssets;
   }
 }
