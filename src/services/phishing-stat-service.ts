@@ -15,7 +15,9 @@ export class PhishingStatService {
   async sinceCreation(): Promise<{
     totalPhishingChats: number;
     totalFakeProfiles: number;
-    totalComplaints: number;
+    totalComplaintsClosed: number;
+    totalComplaintsCreated: number;
+    totalComplaintsInProgress: number;
   }> {
     return this.phishingStatRepository.sinceCreation();
   }
@@ -32,5 +34,29 @@ export class PhishingStatService {
       date,
       'fakeProfilesDetected',
     );
+  }
+
+  async incrementComplaintCreated(date: Date): Promise<void> {
+    await this.phishingStatRepository.createOrUpdateStat(
+      date,
+      'complaintsCreated',
+    );
+  }
+
+  async getAmountDetectedByActor(): Promise<{
+    detectedBySystem: number;
+    detectedByUser: number;
+  }> {
+    return await this.phishingStatRepository.getAmountDetectedByActor();
+  }
+
+  async getFalsePositiveAndInteractions(): Promise<{
+    falsePositiveCount: number;
+    positivesCount: number;
+    interactionRateForFalsePositive: number;
+    interactionRateForPositives: number;
+    interactionRates: { date: Date; interactionRate: number }[];
+  }> {
+    return await this.phishingStatRepository.getFalsePositiveAndInteractions();
   }
 }

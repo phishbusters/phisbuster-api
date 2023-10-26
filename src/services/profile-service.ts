@@ -48,10 +48,33 @@ export class ProfileService {
     confidence: string,
     mostSimilarCompany?: string,
   ): Promise<IAnalyzedProfile> {
-    return this.profileRepository.save(
+    const newProfile = await this.profileRepository.save(
       screenName,
       confidence,
       mostSimilarCompany,
     );
+
+    this.addInteractionToAnalyzedProfile(newProfile);
+    return newProfile;
+  }
+
+  async getProfileByScreenName(
+    screenName: string,
+  ): Promise<IAnalyzedProfile | null> {
+    return this.profileRepository.getByScreenName(screenName);
+  }
+
+  async addInteractionToAnalyzedProfile(
+    analyzedProfile: IAnalyzedProfile,
+  ): Promise<void> {
+    await this.profileRepository.addInteractionToAnalyzedProfile(
+      analyzedProfile,
+    );
+  }
+
+  async markProfileAsFalsePositive(
+    analyzedProfile: IAnalyzedProfile,
+  ): Promise<void> {
+    await this.profileRepository.markProfileAsFalsePositive(analyzedProfile);
   }
 }
