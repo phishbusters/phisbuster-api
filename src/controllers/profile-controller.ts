@@ -32,7 +32,7 @@ export function ProfileController(
           profileService.savePositiveCase(
             screenName,
             confidence.toString(),
-            relatedCompany || 'No conocida',
+            relatedCompany || '',
           );
         }
 

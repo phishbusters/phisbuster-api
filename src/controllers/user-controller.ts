@@ -9,6 +9,16 @@ interface UpdateUser {
   flags: Flags;
 }
 
+export interface UpdateUserSignDocument {
+  address: string;
+  phone: string;
+  email: string;
+  renewalDate: string;
+  legalName: string;
+  legalTitle: string;
+  signatureDataURL: string;
+}
+
 export function UserController(userService: UserService) {
   const router = express.Router();
 
@@ -45,16 +55,36 @@ export function UserController(userService: UserService) {
     }
   });
 
-  router.post('/sign-auth', authenticated, async (req, res) => {
-    const user = req.user;
-    const hasErrors = await userService.createAuthorizationDocument(user);
-    if (hasErrors) {
-      return res.status(500).send({ message: 'Error al firmar el documento.' });
-    }
+  router.post(
+    '/sign-auth',
+    authenticated,
+    defineBodyRoute<UpdateUserSignDocument>(async (req, res) => {
+      const user = req.user;
+      const body = req.body;
+      const hasErrors = await userService.createAuthorizationDocument(
+        user,
+        body,
+      );
 
-    userService.saveUser(user);
-    res.status(200).json({});
-  });
+      if (hasErrors) {
+        return res
+          .status(500)
+          .send({ message: 'Error al firmar el documento.' });
+      }
+
+      user.company!.authorizationDocument.data = {
+        address: body.address,
+        email: body.email,
+        legalName: body.legalName,
+        legalTitle: body.legalTitle,
+        phone: body.phone,
+        renewalDate: body.renewalDate,
+        signatureDataURL: body.signatureDataURL,
+      };
+      userService.saveUser(user);
+      res.status(200).json({});
+    }),
+  );
 
   router.put(
     '/',

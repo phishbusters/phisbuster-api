@@ -28,6 +28,15 @@ export interface IUser extends mongoose.Document {
     authorizationDocument: {
       url: string;
       expiresAt?: Date;
+      data?: {
+        address: string;
+        phone: string;
+        email: string;
+        renewalDate: string;
+        legalName: string;
+        legalTitle: string;
+        signatureDataURL: string;
+      };
     };
   };
   name?: string;
@@ -65,6 +74,7 @@ const userSchema = new mongoose.Schema({
     authorizationDocument: {
       url: { type: String, required: false, default: '' },
       expiresAt: { type: Date, required: false },
+      data: { type: Object, required: false },
     },
     authorizationStatus: {
       type: String,

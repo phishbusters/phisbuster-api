@@ -8,6 +8,7 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { s3 } from '../config/aws-config';
 import { v4 as uuidv4 } from 'uuid';
 import { drawTextWithLineBreaks } from '../utils/pdf';
+import { UpdateUserSignDocument } from '../controllers/user-controller';
 
 export class UserService {
   constructor(private userRepository: UserRepository) {}
@@ -138,7 +139,19 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async createAuthorizationDocument(user: IUser): Promise<boolean> {
+  async createAuthorizationDocument(
+    user: IUser,
+    data: UpdateUserSignDocument,
+  ): Promise<boolean> {
+    const {
+      address,
+      email,
+      legalName,
+      legalTitle,
+      phone,
+      renewalDate,
+      signatureDataURL,
+    } = data;
     const companyName = user.company!.companyName;
     const pdfDoc = await PDFDocument.create();
     const titleFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
@@ -158,6 +171,18 @@ export class UserService {
     });
 
     page.setFontSize(12);
+    const signatureBytes = Uint8Array.from(
+      atob(signatureDataURL.split(',')[1]),
+      (c) => c.charCodeAt(0),
+    );
+    const signatureImage = await pdfDoc.embedPng(signatureBytes);
+    const { width, height } = signatureImage.scale(0.5);
+    page.drawImage(signatureImage, {
+      x: 250,
+      y: 320,
+      width,
+      height,
+    });
 
     const today = new Date();
     const nextYear = new Date(today);
@@ -166,32 +191,31 @@ export class UserService {
       `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     const bodyText = `
     Compañía ${companyName}
-    Dirección: [Dirección de la Compañía]
-    Teléfono: [Número de Teléfono]
-    Correo Electrónico: [Correo Electrónico]
+    Dirección: ${address}
+    Teléfono: ${phone}
+    Correo Electrónico: ${email}
 
     Fecha: ${formatDate(today)}
 
     Estimados representantes de Phish Buster,
 
-    Por la presente, nosotros, Compañía X, con dirección en [Dirección de la Compañía], otorgamos a Phish Buster el derecho exclusivo de actuar en nuestro nombre para llevar a cabo las siguientes actividades:
+    Por la presente, nosotros, ${companyName}, con dirección en ${address}, autorizamos a Phish Buster actuar en nuestro nombre para llevar a cabo las siguientes actividades:
 
     1. Denunciar y gestionar casos de phishing o suplantación de identidad que involucren a nuestra compañía o a nuestros empleados.
     2. Comunicarse con las plataformas pertinentes para resolver los casos de phishing o suplantación de identidad.
     3. Cualquier otra actividad relacionada con la seguridad cibernética que sea de interés para nuestra compañía.
 
-    Esta autorización es válida desde la fecha de este documento hasta ${formatDate(
-      nextYear,
-    )}.
+    Esta autorización es válida desde la fecha de este documento hasta ${renewalDate}.
 
     Nos reservamos el derecho de revocar esta autorización en cualquier momento mediante una notificación escrita a Phish Buster.
-
     Atentamente,
 
-    [Firma Digital o Espacio para Firma Manual]
 
-    [Nombre del Representante Legal]
-    [Título del Representante Legal]
+
+    
+
+    ${legalName}
+    ${legalTitle}
   `;
 
     drawTextWithLineBreaks(
@@ -217,6 +241,7 @@ export class UserService {
     try {
       const s3Upload = await s3.upload(params).promise();
       const url = s3Upload.Location;
+      console.log('url', url);
       user.company!.authorizationDocument = {
         url: url,
         expiresAt: nextYear,

@@ -32,9 +32,9 @@ export function DigitalAssetController(
       // }
 
       const { newAssets, acceptedAuth } = req.body;
-      if (acceptedAuth) {
-        await userService.createAuthorizationDocument(user);
-      }
+      // if (acceptedAuth) {
+      //   await userService.createAuthorizationDocument(user);
+      // }
 
       const assets = await digitalAssetService.saveAssets(newAssets);
       const updatedUser = await userService.updateUserAssets(user, assets);

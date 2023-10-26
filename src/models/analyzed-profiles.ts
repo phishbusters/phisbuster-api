@@ -5,6 +5,7 @@ export interface IAnalyzedProfile extends Document {
   confidenceLevel: number;
   analysisDate: Date;
   mostSimilarCompany: string;
+  complaintId?: string;
 }
 
 const analyzedProfileSchema = new mongoose.Schema({
@@ -12,6 +13,7 @@ const analyzedProfileSchema = new mongoose.Schema({
   confidenceLevel: { type: Number, required: true },
   analysisDate: { type: Date, required: true, default: Date.now() },
   relatedCompanyName: { type: String, required: false, default: '' },
+  complaintId: { type: String, required: false, default: '' },
 });
 
 export const AnalyzedProfile = mongoose.model<IAnalyzedProfile>(
