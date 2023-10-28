@@ -8,6 +8,7 @@ export enum ComplaintStatus {
 }
 
 export interface IComplaint extends Document {
+  _id: string;
   status: ComplaintStatus;
   actionRequired: boolean;
   createdAt: Date;
@@ -20,9 +21,9 @@ const complaintSchema = new mongoose.Schema({
     enum: Object.values(ComplaintStatus),
     required: true,
   },
-  actionRequired: { type: Boolean, required: true },
-  createdAt: { type: Date, required: true, default: Date.now() },
-  updatedAt: { type: Date, required: true, default: Date.now() },
+  actionRequired: { type: Boolean, required: false, default: false },
+  createdAt: { type: Date, required: false, default: Date.now() },
+  updatedAt: { type: Date, required: false, default: Date.now() },
 });
 
 complaintSchema.pre('save', function (next) {

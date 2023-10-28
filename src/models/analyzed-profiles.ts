@@ -10,7 +10,7 @@ export interface IAnalyzedProfile extends Document {
   profileId: string;
   confidenceLevel: number;
   analysisDate: Date;
-  mostSimilarCompany: string;
+  relatedCompanyName: string;
   complaintId?: string;
   detectedBy: DetectedBy;
   markAsFalsePositive: boolean;
