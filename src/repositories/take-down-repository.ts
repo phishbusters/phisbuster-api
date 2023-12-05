@@ -1,5 +1,6 @@
 import { Complaint, ComplaintStatus, IComplaint } from '../models/complaint';
 import { AnalyzedProfile } from '../models/analyzed-profiles';
+import mongoose from 'mongoose';
 
 export class TakeDownRepository {
   async getComplaintsWithCompanyOrSimilarName(
@@ -9,8 +10,15 @@ export class TakeDownRepository {
       relatedCompanyName: companyName,
     }).select('complaintId profileId');
     const complaintIds = matchingProfiles.map((profile) => profile.complaintId);
+    const objectIdComplaintIds = complaintIds.map(
+      (id) => new mongoose.Types.ObjectId(id),
+    );
+
     const complaints = await Complaint.find({
-      _id: { $in: complaintIds },
+      $or: [
+        { _id: { $in: objectIdComplaintIds } },
+        { _id: { $in: complaintIds } },
+      ],
     }).select('id status createdAt updatedAt');
 
     const result = complaints.map((complaint) => {
